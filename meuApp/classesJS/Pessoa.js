@@ -1,4 +1,7 @@
+import crypto from "crypto";
 import bcrypt from "bcrypt";
+const bcrypt = require('bcrypt');
+
 
 export default class Pessoa {
   static listUsuarios = [];
@@ -61,21 +64,42 @@ export default class Pessoa {
 static async cadastro (nome, email,senha) {
     if (nome && email && senha) {
         const senhaHash = await bcrypt.hash(senha,10);
-        const pessoa = new Pessoa();
         pessoa.nome = nome;
         pessoa.email = email;
         pessoa.senha = senhaHash;
         pessoa.estConta = true;
-        return pessoa;
-
     }
     else {
         throw new Error("Preemcha com os dados pedidos")
     }
-}
+    try {
+      const response = await fetch("http://192.168.0.104:3000/cadastro", {
+        method: 'POST' ,
+        headers: {
+          'content-Type' : 'application/json'
+        },
 
-login (pessoa, nome, senha){
-    if(this._nome == nome && this._senha == senha && this._estConta == true) {
+        body: JSON.stringify({
+          nome,
+          email,
+          senha
+        })
+      })
+      const pessoa = new Pessoa;
+    
+      
+      const data = await response.json();
+      console.log(data);
+      return data;
+} 
+catch (error) {
+  console.log(error);
+}}
+
+async login (nome, senha){
+  const senhaCorreta = await bcrypt.compare(senha,this._senha);
+
+    if(this._nome == nome && senhaCorreta && this._estConta == true) {
         alert("Login Completo")
     }
     else {
@@ -86,7 +110,7 @@ login (pessoa, nome, senha){
 // Aqui é as function para trocas
 
 // Troca nome
-trocaNome(Pessoa, nome, newNome) {
+async trocaNome(Pessoa, nome, newNome) {
     if(this._nome == nome) {
         this._nome = newNome;
         alert("Troca comcluida")
@@ -96,7 +120,7 @@ trocaNome(Pessoa, nome, newNome) {
     }
 }
 // Troca EMAIL
-trocaEmail(Pessoa, email, newEmail) {
+async trocaEmail(Pessoa, email, newEmail) {
     if(this._email == email) {
         this._email = newEmail;
         alert("Troca comcluida")
@@ -106,9 +130,11 @@ trocaEmail(Pessoa, email, newEmail) {
     }
 }
 // Troca SENHA
-trocaSenha(Pessoa, senha, newSenha) {
-    if(this._senha == senha) {
-        this._senha = newSenha;
+async trocaSenha(Pessoa, senha, newSenha) {
+  const senhaCorreta = await bcrypt.compare(senha,this._senha);
+    if(senhaCorreta) {
+      const novasenha = await bcrypt.hash(newSenha,10)
+        this._senha = novasenha;
         alert("Troca comcluida")
     }
     else{
@@ -116,17 +142,17 @@ trocaSenha(Pessoa, senha, newSenha) {
     }
 }
 // Deletar conta
-apagarConta(pessoa, nome , email, senha,id) {
-    if (this._nome == nome && this._email == email && this._senha == senha) {
-      const indice = users.indexOf(this.id);
+async apagarConta(pessoa, nome , email, senha,id) {
+  const senhaCorreta = await bcrypt.compare(senha,this._senha);
+    if (this._nome == nome && this._email == email && senhaCorreta) {
+      const indice = Pessoa.listUsuarios.indexOf(this);
 
       if (indice !== -1) {
-        users.splice(indice, 1);
+        Pessoa.listUsuarios.splice(indice, 1);
         alert("Conta deletada")
       }
       else{
         alert("Conta não encontrada")
       }
     }
-}
-}
+}}
