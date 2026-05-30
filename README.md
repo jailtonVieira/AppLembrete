@@ -92,8 +92,8 @@ tarefas e entregas contínuas durante o desenvolvimento do aplicativo
 |------|---------| ----------------|
 | Jailton dos santos| Scrum master| Organizão e Backend|
 | Luiz augusto| Product owner | Definição de requisitos e Frontend|
-| Luis felipe | Desenvolverdor | UI/UX desing |
-| Darlan | Desenvolvedor | UI/UX desing |
+| Luis felipe | Desenvolverdor | UI/UX design |
+| Darlan | Desenvolvedor | UI/UX design |
 | Pedro | Desenvolvedor | Frontend |
 
 ---
