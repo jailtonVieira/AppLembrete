@@ -99,11 +99,11 @@ tarefas e entregas contínuas durante o desenvolvimento do aplicativo
 ---
 
 ## Integrantes:
-- Jailton dos santos vieira filho
-- Luis augusto correia freira
-- Luis felipe silva oliveira
-- Darlan
-- Pedro
+- Jailton dos Santos Vieira Filho
+- Luiz Augusto Correia Freire
+- Luís Felipe Silva Oliveira
+- Darlan Lima Pereira da Silva
+- Pedro Henrique Nogueira de Araújo
 
 ---
 
