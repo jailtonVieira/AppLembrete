@@ -6,11 +6,7 @@ import { createContext, useState, useContext } from 'react';
 export const ListasContext = createContext();
 
 export function ListasProvider({ children }) {
-  const [listas, setListas] = useState([
-    { id: '1', nome: 'Pessoal', cor: '#E53935', icone: 'user' },
-    { id: '2', nome: 'Trabalho', cor: '#1E88E5', icone: 'briefcase' },
-    { id: '3', nome: 'Faculdade', cor: '#43A047', icone: 'book' },
-  ]);
+  const [listas, setListas] = useState([]);
 
   const [lixeiraListas, setLixeiraListas] = useState([]);
 
