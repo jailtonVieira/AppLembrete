@@ -6,11 +6,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { useTema } from '../../hooks/useTema';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 export default function CadastroScreen({ navigation }) {
   const { cores, fontes } = useTema();
 
   const [nome, setNome] = useState('');
+  const { login } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [confirmarSenha, setConfirmarSenha] = useState('');
@@ -56,9 +59,9 @@ export default function CadastroScreen({ navigation }) {
     if (senha !== confirmarSenha) return Alert.alert('Atenção', 'As senhas não coincidem');
     setCarregando(true);
     try {
-      // Quando o back end estiver pronto, aqui vai chamar a API de cadastro
+      // Faz login automático após cadastro passando o nome real
+      await login(email, senha, nome);
       Alert.alert('Sucesso', 'Conta criada com sucesso!');
-      navigation.navigate('Login');
     } catch {
       Alert.alert('Erro', 'Não foi possível criar a conta');
     } finally {
