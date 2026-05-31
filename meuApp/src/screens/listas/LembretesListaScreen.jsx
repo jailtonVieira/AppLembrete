@@ -36,7 +36,7 @@ export default function LembretesListaScreen({ navigation, route }) {
     tituloLinha: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
     cardTitulo: { fontSize: 16, fontFamily: fontes.medio, color: cores.texto, flex: 1, marginRight: 8 },
     cardTituloConcluido: { textDecorationLine: 'line-through', color: cores.textoClaro },
-    etiqueta: { borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2, borderWidth: 1 ,marginRight:10,},
+    etiqueta: { borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2, borderWidth: 1 ,marginRight:9, marginTop: 5},
     etiquetaTexto: { fontSize: 11, fontFamily: fontes.medio,},
     cardInfoLinha: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
     cardInfo: { fontSize: 13, fontFamily: fontes.regular, color: cores.textoClaro },
