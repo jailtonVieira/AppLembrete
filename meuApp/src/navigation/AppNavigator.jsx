@@ -14,6 +14,7 @@ import { claro, escuro } from '../theme';
 import LoginScreen from '../screens/Auth/LoginScreen';
 import CadastroScreen from '../screens/Auth/CadastroScreen';
 import HomeScreen from '../screens/Home/HomeScreen';
+import BuscaScreen from '../screens/Busca/BuscaScreen';
 import ListasScreen from '../screens/listas/ListasScreen';
 import LembretesListaScreen from '../screens/listas/LembretesListaScreen';
 import CriarLembreteScreen from '../screens/Lembrete/CriarLembreteScreen';
@@ -61,6 +62,15 @@ function HomeTabs() {
           tabBarIcon: ({ color, size }) => <Feather name="list" size={size} color={color} />,
         }}
       />
+
+      <Tab.Screen
+      name="Busca"
+      component={BuscaScreen}
+      options={{
+      tabBarLabel: 'Buscar',
+      tabBarIcon: ({ color, size }) => <Feather name="search" size={size} color={color} />,
+  }}
+/>
       <Tab.Screen
         name="Lixeira"
         component={LixeiraScreen}
