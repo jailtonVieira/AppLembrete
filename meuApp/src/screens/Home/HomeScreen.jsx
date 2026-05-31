@@ -204,7 +204,7 @@ export default function HomeScreen({ navigation }) {
                     {item.titulo}
                   </Text>
                   {item.prioridade && (
-                    <View style={{ backgroundColor: corPrioridade[item.prioridade] + '25', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2, borderWidth: 1, borderColor: corPrioridade[item.prioridade] }}>
+                    <View style={{ backgroundColor: corPrioridade[item.prioridade] + '25', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2, borderWidth: 1, marginRight: 9, marginTop: 5, borderColor: corPrioridade[item.prioridade] }}>
                       <Text style={{ fontSize: 11, fontFamily: fontes.medio, color: corPrioridade[item.prioridade] }}>
                         {item.prioridade.charAt(0).toUpperCase() + item.prioridade.slice(1)}
                       </Text>
