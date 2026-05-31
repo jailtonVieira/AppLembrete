@@ -10,10 +10,18 @@ import { useLembretes } from '../../context/LembretesContext';
 
 export default function DetalhesLembreteScreen({ navigation, route }) {
   const { cores, fontes } = useTema();
-  const { excluir, editar } = useLembretes();
-  const { lembrete } = route.params;
+  // FIX: importa lembretes para derivar o lembrete atual sempre do contexto (dados sempre frescos)
+  const { lembretes, excluir, editar } = useLembretes();
 
-  const [subtarefas, setSubtarefas] = useState(lembrete.subtarefas || []);
+  // FIX: em vez de usar route.params.lembrete diretamente (dados estáticos),
+  // busca o lembrete pelo ID no contexto — assim a tela atualiza após uma edição
+  const lembreteId = route.params.lembrete.id;
+  const lembrete = lembretes.find(l => l.id === lembreteId) ?? route.params.lembrete;
+
+  // FIX: subtarefas derivadas do contexto — sem estado local
+  // qualquer chamada a editar() atualiza o contexto e re-renderiza automaticamente
+  const subtarefas = lembrete.subtarefas ?? [];
+
   const [novaSubtarefa, setNovaSubtarefa] = useState('');
 
   const corPrioridade = { alta: '#E53935', media: '#FB8C00', baixa: '#43A047' };
@@ -28,21 +36,20 @@ export default function DetalhesLembreteScreen({ navigation, route }) {
   function handleAdicionarSubtarefa() {
     if (!novaSubtarefa.trim()) return;
     const nova = { id: Date.now().toString(), titulo: novaSubtarefa.trim(), concluida: false };
-    const atualizadas = [...subtarefas, nova];
-    setSubtarefas(atualizadas);
-    editar(lembrete.id, { subtarefas: atualizadas });
+    // FIX: apenas atualiza o contexto — o re-render vem de lá
+    editar(lembrete.id, { subtarefas: [...subtarefas, nova] });
     setNovaSubtarefa('');
   }
 
   function handleConcluirSubtarefa(id) {
     const atualizadas = subtarefas.map(s => s.id === id ? { ...s, concluida: !s.concluida } : s);
-    setSubtarefas(atualizadas);
+    // FIX: apenas atualiza o contexto
     editar(lembrete.id, { subtarefas: atualizadas });
   }
 
   function handleExcluirSubtarefa(id) {
     const atualizadas = subtarefas.filter(s => s.id !== id);
-    setSubtarefas(atualizadas);
+    // FIX: apenas atualiza o contexto
     editar(lembrete.id, { subtarefas: atualizadas });
   }
 
@@ -115,15 +122,15 @@ export default function DetalhesLembreteScreen({ navigation, route }) {
             <Feather name="calendar" size={16} color={cores.textoClaro} />
             <Text style={styles.infoTexto}>{lembrete.dataHora?.split(' ')[0] || lembrete.dataHora}</Text>
           </View>
-{lembrete.dataHora?.includes(' ') && (
-  <>
-    <View style={styles.divisor} />
-    <View style={styles.infoLinha}>
-      <Feather name="clock" size={16} color={cores.textoClaro} />
-      <Text style={styles.infoTexto}>{lembrete.dataHora.split(' ')[1]}</Text>
-    </View>
-  </>
-)}
+          {lembrete.dataHora?.includes(' ') && (
+            <>
+              <View style={styles.divisor} />
+              <View style={styles.infoLinha}>
+                <Feather name="clock" size={16} color={cores.textoClaro} />
+                <Text style={styles.infoTexto}>{lembrete.dataHora.split(' ')[1]}</Text>
+              </View>
+            </>
+          )}
           {lembrete.local ? (<><View style={styles.divisor} /><View style={styles.infoLinha}><Feather name="map-pin" size={16} color={cores.textoClaro} /><Text style={styles.infoTexto}>{lembrete.local}</Text></View></>) : null}
           {lembrete.categoria ? (<><View style={styles.divisor} /><View style={styles.infoLinha}><Feather name="tag" size={16} color={cores.textoClaro} /><Text style={styles.infoTexto}>{lembrete.categoria}</Text></View></>) : null}
           {lembrete.url ? (<><View style={styles.divisor} /><View style={styles.infoLinha}><Feather name="link" size={16} color={cores.textoClaro} /><Text style={styles.infoTexto}>{lembrete.url}</Text></View></>) : null}
@@ -153,7 +160,6 @@ export default function DetalhesLembreteScreen({ navigation, route }) {
             </View>
           ))}
           {subtarefas.length > 0 && <View style={styles.divisor} />}
-          {/* Campo para adicionar nova subtarefa */}
           <View style={styles.adicionarLinha}>
             <TextInput style={styles.adicionarInput} value={novaSubtarefa} onChangeText={setNovaSubtarefa} placeholder="Adicionar subtarefa..." placeholderTextColor={cores.textoClaro} onSubmitEditing={handleAdicionarSubtarefa} />
             <TouchableOpacity style={styles.adicionarBtn} onPress={handleAdicionarSubtarefa}>
@@ -162,6 +168,7 @@ export default function DetalhesLembreteScreen({ navigation, route }) {
           </View>
         </View>
 
+        {/* FIX: passa o lembrete atual (do contexto, não de route.params) para garantir dados frescos */}
         <TouchableOpacity style={styles.botao} onPress={() => navigation.navigate('CriarLembrete', { lembrete })}>
           <Text style={styles.botaoTexto}>Editar lembrete</Text>
         </TouchableOpacity>
