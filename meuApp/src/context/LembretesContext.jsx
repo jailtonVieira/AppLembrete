@@ -8,47 +8,7 @@ export const LembretesContext = createContext();
 
 export function LembretesProvider({ children }) {
   // Dados de exemplo para desenvolvimento. Substituir pela API quando o back end estiver pronto
-  const [lembretes, setLembretes] = useState([
-    {
-      id: '1',
-      titulo: 'Reunião do grupo',
-      descricao: 'Discutir o projeto',
-      dataHora: '07/05/2026 14:00',
-      local: 'Faculdade',
-      categoria: 'Faculdade',
-      concluido: false,
-      prioridade: 'alta',
-      antecipacao: null,
-      repeticao: null,
-      url: '',
-    },
-    {
-      id: '2',
-      titulo: 'Entregar trabalho',
-      descricao: 'Enviar pelo portal',
-      dataHora: '26/04/2026 23:59',
-      local: '',
-      categoria: 'Faculdade',
-      concluido: false,
-      prioridade: 'media',
-      antecipacao: null,
-      repeticao: null,
-      url: '',
-    },
-    {
-      id: '3',
-      titulo: 'Consulta médica',
-      descricao: '',
-      dataHora: '27/04/2026 10:00',
-      local: 'UPA Centro',
-      categoria: 'Saúde',
-      concluido: true,
-      prioridade: 'baixa',
-      antecipacao: null,
-      repeticao: null,
-      url: '',
-    },
-  ]);
+  const [lembretes, setLembretes] = useState([]);
 
   const [lixeira, setLixeira] = useState([]);
 
