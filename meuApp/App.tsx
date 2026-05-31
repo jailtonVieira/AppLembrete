@@ -1,6 +1,3 @@
-// App.js
-// Arquivo principal do app — inicializa fontes, contextos e navegação
-
 import { AuthProvider } from './src/context/AuthContext';
 import { LembretesProvider } from './src/context/LembretesContext';
 import { ListasProvider } from './src/context/ListasContext';
@@ -11,18 +8,17 @@ import { StatusBar } from 'expo-status-bar';
 import { View, ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-// AppContent fica dentro do TemaProvider para acessar o contexto de tema
 function AppContent() {
   const { modoEscuro } = useTemaContext();
   return (
     <>
       <StatusBar style={modoEscuro ? 'light' : 'dark'} backgroundColor={modoEscuro ? '#000000' : '#F8F9FB'} />
       <AuthProvider>
-        <ListasProvider>
-          <LembretesProvider>
-            <AppNavigator />
-          </LembretesProvider>
-        </ListasProvider>
+          <ListasProvider>
+            <LembretesProvider>
+              <AppNavigator />
+            </LembretesProvider>
+          </ListasProvider>
       </AuthProvider>
     </>
   );

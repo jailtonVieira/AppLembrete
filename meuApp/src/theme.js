@@ -23,10 +23,10 @@ export const escuro = {
   primaria: '#818CF8',       // roxo claro — destaque premium
   secundaria: '#A5B4FC',
   fundo: '#000000',          // preto puro
-  fundoCard: '#1A1A1A',      // card bem escuro
+  fundoCard: '#000000',      // card bem escuro
   texto: '#F9FAFB',
   textoClaro: '#9CA3AF',
-  borda: '#2D2D2D',
+  borda: '#374151',         // borda escura para contraste
   erro: '#F87171',
   sucesso: '#34D399',
   destaque: '#818CF8',

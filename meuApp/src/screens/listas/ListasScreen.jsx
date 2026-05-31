@@ -102,7 +102,7 @@ export default function ListasScreen({ navigation }) {
 
   const s = StyleSheet.create({
     container: { flex: 1, backgroundColor: cores.fundo },
-    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 24, paddingBottom: 12 },
+    header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 24, paddingBottom: 12, },
     titulo: { fontSize: 28, fontFamily: fontes.negrito, color: cores.texto },
     headerAcoes: { flexDirection: 'row', gap: 10, alignItems: 'center' },
     btnIcone: { width: 36, height: 36, borderRadius: 18, backgroundColor: cores.fundoCard, borderWidth: 1, borderColor: cores.borda, alignItems: 'center', justifyContent: 'center' },
@@ -111,7 +111,7 @@ export default function ListasScreen({ navigation }) {
     barraSelecao: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10, backgroundColor: cores.fundoCard, borderBottomWidth: 1, borderBottomColor: cores.borda },
     barraSelecaoTexto: { fontSize: 14, fontFamily: fontes.medio, color: cores.texto },
     barraSelecaoAcoes: { flexDirection: 'row', gap: 16 },
-    btnSelecaoAcao: { fontSize: 14, fontFamily: fontes.medio, color: cores.primaria },
+    btnSelecaoAcao: { fontSize: 14, fontFamily: fontes.medio, color: cores.primaria, marginRight: 5 },
     btnSelecaoPerigo: { fontSize: 14, fontFamily: fontes.medio, color: cores.erro },
     lista: { padding: 16, paddingTop: 8 },
     card: { flexDirection: 'row', alignItems: 'center', backgroundColor: cores.fundoCard, borderRadius: 12, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: cores.borda, gap: 12 },
@@ -170,7 +170,7 @@ export default function ListasScreen({ navigation }) {
               <Text style={s.btnSelecaoAcao}>{todasSelecionadas ? 'Desmarcar todas' : 'Selecionar todas'}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleExcluirSelecionadas}>
-              <Text style={s.btnSelecaoPerigo}>Mover para lixeira</Text>
+              <Text style={s.btnSelecaoPerigo}>Remover listas</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleCancelarSelecao}>
               <Text style={s.btnSelecaoAcao}>Cancelar</Text>
