@@ -35,16 +35,16 @@ export default function LoginScreen({ navigation }) {
   }
 
   async function handleLogin() {
-    if (!email || !senha) return Alert.alert('Atenção', 'Preencha todos os campos');
-    setCarregando(true);
-    try {
-      await login(email, senha);
-    } catch {
-      Alert.alert('Erro', 'Email ou senha incorretos');
-    } finally {
-      setCarregando(false);
-    }
+  if (!email || !senha) return Alert.alert('Atenção', 'Preencha todos os campos');
+  setCarregando(true);
+  try {
+    await login(email, senha);
+  } catch {
+    Alert.alert('Erro', 'Email ou senha incorretos');
+  } finally {
+    setCarregando(false);
   }
+}
 
   const s = StyleSheet.create({
     container: { flex: 1, backgroundColor: cores.fundo },
