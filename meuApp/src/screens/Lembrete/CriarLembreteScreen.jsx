@@ -1,5 +1,5 @@
 // CriarLembreteScreen.jsx
-// Tela para criar um novo lembrete
+// Tela para criar ou editar um lembrete
 
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, ScrollView, Modal, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -35,32 +35,77 @@ const opcoesRepeticao = [
   { id: 'personalizado', label: 'Personalizado' },
 ];
 
-export default function CriarLembreteScreen({ navigation, route }) {
-  const { cores, fontes, modoEscuro } = useTema();
-  const { adicionar } = useLembretes();
+// Converte a string "dd/mm/aaaa hh:mm" de volta para objetos Date
+// usada para pré-preencher os pickers no modo edição
+function parsearDataHora(dataHoraStr) {
+  if (!dataHoraStr) return { dataInicial: null, horaInicial: null };
+  const partes = dataHoraStr.split(' ');
+  const dataStr = partes[0]; // "dd/mm/aaaa"
+  const horaStr = partes[1]; // "hh:mm" (opcional)
 
-  const [titulo, setTitulo] = useState('');
-  const [notas, setNotas] = useState('');
-  const [categoria, setCategoria] = useState('');
-  const [url, setUrl] = useState('');
-  const [prioridade, setPrioridade] = useState(null);
-  const [antecipacao, setAntecipacao] = useState(null);
-  const [repeticao, setRepeticao] = useState(null);
+  let dataInicial = null;
+  let horaInicial = null;
+
+  if (dataStr) {
+    const [dia, mes, ano] = dataStr.split('/');
+    dataInicial = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
+  }
+
+  if (horaStr) {
+    const [horas, minutos] = horaStr.split(':');
+    horaInicial = new Date();
+    horaInicial.setHours(parseInt(horas), parseInt(minutos), 0, 0);
+  }
+
+  return { dataInicial, horaInicial };
+}
+
+export default function CriarLembreteScreen({ navigation, route }) {
+  const { cores, fontes } = useTema();
+  // FIX: importa editar além de adicionar — necessário para o modo edição
+  const { adicionar, editar } = useLembretes();
+
+  // FIX: detecta se a tela foi aberta para editar um lembrete existente
+  const lembreteParaEditar = route.params?.lembrete ?? null;
+  const modoEdicao = !!lembreteParaEditar;
+
+  // FIX: extrai objetos Date da string dataHora para pré-preencher os pickers
+  const { dataInicial, horaInicial } = parsearDataHora(lembreteParaEditar?.dataHora);
+
+  // FIX: resolve o estado inicial de antecipação — pode ser string (id) ou objeto (personalizado)
+  const _ant = lembreteParaEditar?.antecipacao;
+  const antecipacaoInicial = (typeof _ant === 'object' && _ant !== null) ? 'personalizado' : (_ant ?? null);
+  const antecipacaoPersonalizadaInicial = (typeof _ant === 'object' && _ant !== null) ? _ant : { valor: '', unidade: 'minutos' };
+
+  // FIX: resolve o estado inicial de repetição — pode ser string (id) ou objeto (personalizado)
+  const _rep = lembreteParaEditar?.repeticao;
+  const repeticaoInicial = (typeof _rep === 'object' && _rep !== null) ? 'personalizado' : (_rep ?? null);
+  const repeticaoPersonalizadaInicial = (typeof _rep === 'object' && _rep !== null) ? _rep : { valor: '', unidade: 'dias' };
+
+  // FIX: todos os campos inicializados com os dados do lembrete existente quando em modo edição
+  const [titulo, setTitulo] = useState(lembreteParaEditar?.titulo ?? '');
+  const [notas, setNotas] = useState(lembreteParaEditar?.notas ?? '');
+  const [categoria, setCategoria] = useState(lembreteParaEditar?.categoria ?? '');
+  const [url, setUrl] = useState(lembreteParaEditar?.url ?? '');
+  const [prioridade, setPrioridade] = useState(lembreteParaEditar?.prioridade ?? null);
+  const [antecipacao, setAntecipacao] = useState(antecipacaoInicial);
+  const [repeticao, setRepeticao] = useState(repeticaoInicial);
   const [carregando, setCarregando] = useState(false);
   const [erros, setErros] = useState({});
-  const [listaId] = useState(route.params?.listaId || null);
+  const [listaId] = useState(lembreteParaEditar?.listaId ?? route.params?.listaId ?? null);
 
-  const [data, setData] = useState(null);
-  const [hora, setHora] = useState(null);
-  const [dataTemp, setDataTemp] = useState(new Date());
-  const [horaTemp, setHoraTemp] = useState(new Date());
+  const [data, setData] = useState(dataInicial);
+  const [hora, setHora] = useState(horaInicial);
+  // FIX: pickers também inicializados com os valores existentes para mostrar a data/hora correta
+  const [dataTemp, setDataTemp] = useState(dataInicial ?? new Date());
+  const [horaTemp, setHoraTemp] = useState(horaInicial ?? new Date());
   const [mostrarData, setMostrarData] = useState(false);
   const [mostrarHora, setMostrarHora] = useState(false);
 
   const [modalAntecipacao, setModalAntecipacao] = useState(false);
   const [modalRepeticao, setModalRepeticao] = useState(false);
-  const [antecipacaoPersonalizada, setAntecipacaoPersonalizada] = useState({ valor: '', unidade: 'minutos' });
-  const [repeticaoPersonalizada, setRepeticaoPersonalizada] = useState({ valor: '', unidade: 'dias' });
+  const [antecipacaoPersonalizada, setAntecipacaoPersonalizada] = useState(antecipacaoPersonalizadaInicial);
+  const [repeticaoPersonalizada, setRepeticaoPersonalizada] = useState(repeticaoPersonalizadaInicial);
 
   const unidadesAntecipacao = ['minutos', 'horas', 'dias', 'semanas', 'meses'];
   const unidadesRepeticao = ['horas', 'dias', 'semanas', 'meses'];
@@ -81,7 +126,6 @@ export default function CriarLembreteScreen({ navigation, route }) {
     return `${String(h.getHours()).padStart(2, '0')}:${String(h.getMinutes()).padStart(2, '0')}`;
   }
 
-  // CORREÇÃO DO BUG — função que estava faltando
   function dataHoraFormatada() {
     if (!data && !hora) return null;
     if (data && !hora) return formatarData(data);
@@ -114,7 +158,7 @@ export default function CriarLembreteScreen({ navigation, route }) {
     if (!validar()) return;
     setCarregando(true);
     try {
-      adicionar({
+      const dados = {
         titulo,
         notas,
         dataHora: dataHoraFormatada(),
@@ -124,7 +168,15 @@ export default function CriarLembreteScreen({ navigation, route }) {
         listaId,
         antecipacao: antecipacao === 'personalizado' ? antecipacaoPersonalizada : antecipacao,
         repeticao: repeticao === 'personalizado' ? repeticaoPersonalizada : repeticao,
-      });
+      };
+
+      // FIX: chama editar() ou adicionar() dependendo do modo
+      if (modoEdicao) {
+        editar(lembreteParaEditar.id, dados);
+      } else {
+        adicionar(dados);
+      }
+
       navigation.goBack();
     } catch {
       Alert.alert('Erro', 'Não foi possível salvar o lembrete');
@@ -220,7 +272,10 @@ export default function CriarLembreteScreen({ navigation, route }) {
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginRight: 12 }}>
           <Feather name="arrow-left" size={22} color={cores.texto} />
         </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontFamily: fontes.negrito, color: cores.texto }}>Novo lembrete</Text>
+        {/* FIX: título da tela muda conforme o modo */}
+        <Text style={{ fontSize: 18, fontFamily: fontes.negrito, color: cores.texto }}>
+          {modoEdicao ? 'Editar lembrete' : 'Novo lembrete'}
+        </Text>
       </View>
 
       <ScrollView contentContainerStyle={styles.conteudo}>
@@ -327,8 +382,11 @@ export default function CriarLembreteScreen({ navigation, route }) {
         </View>
         {erros.url && <Text style={styles.textoErro}>{erros.url}</Text>}
 
+        {/* FIX: texto do botão muda conforme o modo */}
         <TouchableOpacity style={styles.botao} onPress={handleSalvar} disabled={carregando}>
-          <Text style={styles.botaoTexto}>{carregando ? 'Salvando...' : 'Salvar lembrete'}</Text>
+          <Text style={styles.botaoTexto}>
+            {carregando ? 'Salvando...' : modoEdicao ? 'Atualizar lembrete' : 'Salvar lembrete'}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.botaoSecundario} onPress={() => navigation.goBack()}>
           <Text style={styles.botaoSecundarioTexto}>Cancelar</Text>
