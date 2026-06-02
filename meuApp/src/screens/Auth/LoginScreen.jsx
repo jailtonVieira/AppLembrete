@@ -1,16 +1,19 @@
 // LoginScreen.jsx
 // Tela de entrada do app — email, senha e opções de login social
 
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useContext, useState } from 'react';
 import { Feather } from '@expo/vector-icons';
 import { AuthContext } from '../../context/AuthContext';
 import { useTema } from '../../hooks/useTema';
+import { useTemaContext } from '../../context/TemaContext';
+import { Switch } from 'react-native';
 
 export default function LoginScreen({ navigation }) {
   const { login } = useContext(AuthContext);
   const { cores, fontes } = useTema();
+  const { modoEscuro, alternarTema } = useTemaContext();
 
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
@@ -49,10 +52,10 @@ export default function LoginScreen({ navigation }) {
   const s = StyleSheet.create({
     container: { flex: 1, backgroundColor: cores.fundo },
     inner: { flex: 1, padding: 24, justifyContent: 'center' },
-    logoContainer: { alignItems: 'center', marginBottom: 32 },
-    logo: { width: 80, height: 80, borderRadius: 20 },
-    logoPlaceholder: { width: 80, height: 80, borderRadius: 20, backgroundColor: cores.primaria, alignItems: 'center', justifyContent: 'center' },
-    titulo: { fontSize: 28, fontFamily: fontes.negrito, color: cores.texto, textAlign: 'center', marginBottom: 4 },
+    logoContainer: { alignItems: 'center', marginBottom: -70, height: 180, },
+    logo: { width: 150, height: 150, borderRadius: 30 },
+    logoPlaceholder: { width: 80, height: 80, borderRadius: 20, backgroundColor: cores.primaria, alignItems: 'center', justifyContent: 'center'},
+    titulo: { fontSize: 28, fontFamily: fontes.negrito, color: cores.texto, textAlign: 'center', marginBottom: 10 },
     subtitulo: { fontSize: 15, fontFamily: fontes.regular, color: cores.textoClaro, textAlign: 'center', marginBottom: 33 },
     label: { fontSize: 14, fontFamily: fontes.medio, color: cores.texto, marginBottom: 6 },
     inputContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: cores.fundoCard, borderWidth: 1, borderColor: cores.borda, borderRadius: 10, marginBottom: 4 },
@@ -75,12 +78,26 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <SafeAreaView style={s.container}>
+      {/* Botão de tema no canto superior direito */}
+      <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 24, paddingTop: 16 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: s.container.backgroundColor, borderRadius: 20, padding: 6, borderWidth: 1, borderColor: cores.borda }}>
+          <Feather name={modoEscuro ? 'moon' : 'sun'} size={16} color={cores.textoClaro} />
+          <Switch
+            value={modoEscuro}
+            onValueChange={alternarTema}
+            trackColor={{ false: cores.borda, true: cores.primaria }}
+            thumbColor={cores.fundo}
+            style={{ transform: [{ scaleX: 0.8 }, { scaleY: 0.8 }] }}
+          />
+        </View>
+      </View>
+
       <View style={s.inner}>
 
         {/* Logo do app — substituir pela imagem real quando o grupo entregar */}
         <View style={s.logoContainer}>
           <View style={s.logoPlaceholder}>
-            <Feather name="bell" size={36} color="#fff" />
+          <Feather name="bell" size={36} color="#fff" />
           </View>
         </View>
 
