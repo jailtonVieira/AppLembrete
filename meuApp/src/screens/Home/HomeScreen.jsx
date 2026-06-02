@@ -78,7 +78,7 @@ export default function HomeScreen({ navigation }) {
     avatar: { width: 38, height: 38, borderRadius: 19, backgroundColor: cores.primaria, alignItems: 'center', justifyContent: 'center' },
     avatarTexto: { color: '#fff', fontSize: 16, fontFamily: fontes.negrito },
     headerTextos: { flex: 1 },
-    titulo: { fontSize: 22, fontFamily: fontes.negrito, color: cores.texto },
+    titulo: { fontSize: 22, fontFamily: fontes.negrito, color: cores.primaria, marginRight: 8 },
     headerDireita: { flexDirection: 'row', alignItems: 'center', gap: 8 },
     btnIcone: { width: 36, height: 36, borderRadius: 18, backgroundColor: cores.fundoCard, borderWidth: 1, borderColor: cores.borda, alignItems: 'center', justifyContent: 'center' },
     cardsContainer: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 16, gap: 10, marginBottom: 8 },
@@ -136,7 +136,7 @@ export default function HomeScreen({ navigation }) {
             )}
           </TouchableOpacity>
           <View style={styles.headerTextos}>
-            <Text style={styles.titulo}>Meus lembretes</Text>
+            <Text style={styles.titulo}>Noteup</Text>
           </View>
         </View>
         <View style={styles.headerDireita}>
@@ -204,7 +204,7 @@ export default function HomeScreen({ navigation }) {
                     {item.titulo}
                   </Text>
                   {item.prioridade && (
-                    <View style={{ backgroundColor: corPrioridade[item.prioridade] + '25', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2, borderWidth: 1, marginRight: 9, marginTop: 5, borderColor: corPrioridade[item.prioridade] }}>
+                    <View style={{ backgroundColor: corPrioridade[item.prioridade] + '25', borderRadius: 4, paddingHorizontal: 6, paddingVertical: 2, borderWidth: 1,marginRight:9, marginTop: 5, borderColor: corPrioridade[item.prioridade] }}>
                       <Text style={{ fontSize: 11, fontFamily: fontes.medio, color: corPrioridade[item.prioridade] }}>
                         {item.prioridade.charAt(0).toUpperCase() + item.prioridade.slice(1)}
                       </Text>
