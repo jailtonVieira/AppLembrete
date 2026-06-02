@@ -1,0 +1,11 @@
+# Arquivos e pastas ignorados pelo Git
+node_modules/
+.expo/
+.env
+*.log
+package-lock.json
+.DS_Store
+dist/
+build/
+*.sqlite
+*.db
